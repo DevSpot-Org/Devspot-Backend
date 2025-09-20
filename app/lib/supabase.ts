@@ -12,19 +12,14 @@ export const getUser = async () => {
 };
 export type SupabaseClient = CustomSupabaseClient<Database>;
 
-export async function createClient(isAdmin?: boolean) {
+export async function createClient(isAdmin?: boolean): Promise<SupabaseClient> {
   const cookieStore = await cookies();
 
-  const key = isAdmin
-    ? process.env.SUPABASE_SERVICE_ROLE_KEY!
-    : process.env.SUPABASE_ANON_KEY!;
+  const key = isAdmin ? process.env.SUPABASE_SERVICE_ROLE_KEY! : process.env.SUPABASE_ANON_KEY!;
 
-  return createServerClient<Database>(process.env.SUPABASE_URL!, key, {
+  const supabase = createServerClient<Database, "public">(process.env.SUPABASE_URL!, key, {
     cookieOptions: {
-      domain:
-        process.env.APP_ENV === "local"
-          ? ".localhost"
-          : `.${await getApexDomainServer()}`, // Allow e.g. devspot.app and all subdomains (*.devspot.app)
+      domain: process.env.APP_ENV === "local" ? ".localhost" : `.${await getApexDomainServer()}`, // Allow e.g. devspot.app and all subdomains (*.devspot.app)
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       path: "/",
@@ -37,9 +32,7 @@ export async function createClient(isAdmin?: boolean) {
       },
       setAll(cookiesToSet) {
         try {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
-          );
+          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
         } catch {
           // The `setAll` method was called from a Server Component.
           // This can be ignored if you have middleware refreshing
@@ -48,4 +41,6 @@ export async function createClient(isAdmin?: boolean) {
       },
     },
   });
+
+  return supabase as unknown as SupabaseClient;
 }

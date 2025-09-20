@@ -15,9 +15,9 @@
     "prepare": "npx husky"
   },
   "dependencies": {
+    "next": "^14.0.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
-    "next": "^14.0.0",
     "yup": "^1.6.1"
   },
   "devDependencies": {
@@ -28,6 +28,7 @@
     "@supabase/postgrest-js": "^1.19.4",
     "@supabase/ssr": "^0.4.0",
     "@supabase/supabase-js": "^2.43.5",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -41,8 +42,8 @@
     "husky": "^9.1.7",
     "jsonwebtoken": "^9.0.2",
     "lint-staged": "^15.5.2",
-    "sanitize-html": "^2.17.0",
     "prettier": "^3.6.2",
+    "sanitize-html": "^2.17.0",
     "supabase": "^2.0.0",
     "typescript": "^5"
   },
