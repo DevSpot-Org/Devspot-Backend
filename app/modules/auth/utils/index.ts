@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase";
 import { NextResponse } from "next/server";
 
+
 export async function getAuthenticatedUser() {
   try {
     const supabase = await createClient();

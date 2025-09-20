@@ -8,18 +8,11 @@ import { ParticipantWalletRepository } from "../repositories/wallet.repository";
 
 const SUPABASE_JWT_SECRET = process.env.SUPABASE_JWT_SECRET!;
 
-async function validateNonce(
-  address: string,
-  nonce: string,
-  signature: string
-) {
+async function validateNonce(address: string, nonce: string, signature: string) {
   const supabase = await createClient();
   const nonceRepository = new NonceRepository(supabase);
 
-  const nonceData = await nonceRepository.findValidNonce(
-    address.toLocaleLowerCase(),
-    nonce
-  );
+  const nonceData = await nonceRepository.findValidNonce(address.toLocaleLowerCase(), nonce);
 
   if (!nonceData) throw new Error("Invalid or expired nonce");
 
@@ -49,22 +42,23 @@ async function linkWalletToUser(userId: string, address: string) {
 
 async function createUserWithWallet(address: string) {
   const supabase = await createClient();
-  const supabaseAdmin = await createClient(true);
+  const supabaseAdmin = await createClient({
+    isAdmin: true,
+  });
   const lowerCaseAddress = address.toLowerCase();
 
   const dummyEmail = `${lowerCaseAddress}@devspot.app`;
   const dummyPassword = crypto.randomBytes(16).toString("hex");
 
-  const { data: userData, error: userError } =
-    await supabaseAdmin.auth.admin.createUser({
-      email: dummyEmail,
-      password: dummyPassword,
-      email_confirm: true,
-      user_metadata: {
-        first_wallet: lowerCaseAddress,
-        full_name: lowerCaseAddress.slice(-4),
-      },
-    });
+  const { data: userData, error: userError } = await supabaseAdmin.auth.admin.createUser({
+    email: dummyEmail,
+    password: dummyPassword,
+    email_confirm: true,
+    user_metadata: {
+      first_wallet: lowerCaseAddress,
+      full_name: lowerCaseAddress.slice(-4),
+    },
+  });
 
   if (userError) throw new Error(`User creation failed: ${userError.message}`);
 

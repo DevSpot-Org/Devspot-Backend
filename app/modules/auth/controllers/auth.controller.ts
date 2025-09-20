@@ -39,8 +39,29 @@ export const signInController = async (body: any) => {
     await signInValidator.validate(body);
     const data = await signInService(body.email, body.password);
 
-    return buildResponse({ data, message: "Signin successful" });
+    const { session } = data;
+
+    const res = buildResponse({ data, message: "Signin successful" });
+
+    if (session) {
+      res.cookies.set("sb-access-token", session.access_token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+        maxAge: 60 * 60,
+      });
+      res.cookies.set("sb-refresh-token", session.refresh_token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        path: "/",
+        maxAge: 60 * 60 * 24 * 7,
+      });
+    }
+
+    return res;
   } catch (err: any) {
-    return buildResponse({ isError: true, message: err.message, data:err });
+    return buildResponse({ isError: true, message: err.message, data: err });
   }
 };

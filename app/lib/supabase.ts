@@ -5,17 +5,26 @@ import { SupabaseClient as CustomSupabaseClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 
 export const getUser = async () => {
-  const auth = await createClient();
-  const user = (await auth.auth.getUser()).data.user;
+  const supabase = await createClient();
+  const userObj = await supabase.auth.getUser();
+  const user = userObj.data.user;
 
   return user;
 };
 export type SupabaseClient = CustomSupabaseClient<Database>;
 
-export async function createClient(isAdmin?: boolean): Promise<SupabaseClient> {
+interface CreateSupabaseClientOptions {
+  isAdmin: boolean;
+}
+
+export async function createClient(
+  options?: Partial<CreateSupabaseClientOptions>
+): Promise<SupabaseClient> {
   const cookieStore = await cookies();
 
-  const key = isAdmin ? process.env.SUPABASE_SERVICE_ROLE_KEY! : process.env.SUPABASE_ANON_KEY!;
+  const key = options?.isAdmin
+    ? process.env.SUPABASE_SERVICE_ROLE_KEY!
+    : process.env.SUPABASE_ANON_KEY!;
 
   const supabase = createServerClient<Database, "public">(process.env.SUPABASE_URL!, key, {
     cookieOptions: {
