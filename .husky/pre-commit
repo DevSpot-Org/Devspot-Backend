@@ -1,0 +1,9 @@
+#!/bin/sh
+
+export PATH="$PATH:/usr/local/bin"
+
+echo "🚨 Husky pre-commit is starting"
+
+npx lint-staged || exit 1
+
+echo "✅ Pre-commit passed"

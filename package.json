@@ -1,0 +1,63 @@
+{
+  "name": "devspot2",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbo",
+    "build": "pnpm run generate-types && next build",
+    "build:production": "pnpm run generate-types:production && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "generate-types": "npx supabase gen types typescript --project-id pbnaslxybqdeosvgknbq --schema public > app/types/database.ts",
+    "generate-types:production": "npx supabase gen types typescript --project-id dbaimdvhgbmmxfjaszcp --schema public > app/types/database.ts",
+    "seed-data": "npx supabase db dump --data-only -f supabase/seed.sql && npx supabase db reset",
+    "format": "prettier --write .",
+    "prepare": "npx husky"
+  },
+  "dependencies": {
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "next": "^14.0.0",
+    "yup": "^1.6.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@eslint/eslintrc": "^3",
+    "@novu/api": "^0.6.2",
+    "@supabase/postgrest-js": "^1.19.4",
+    "@supabase/ssr": "^0.4.0",
+    "@supabase/supabase-js": "^2.43.5",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/sanitize-html": "^2.16.0",
+    "eslint": "^9",
+    "eslint-config-next": "15.5.3",
+    "ethers": "^6.13.5",
+    "google": "link:@next/third-parties/google",
+    "google-auth-library": "^10.1.0",
+    "googleapis": "^153.0.0",
+    "husky": "^9.1.7",
+    "jsonwebtoken": "^9.0.2",
+    "lint-staged": "^15.5.2",
+    "sanitize-html": "^2.17.0",
+    "prettier": "^3.6.2",
+    "supabase": "^2.0.0",
+    "typescript": "^5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{json,css,scss,md}": [
+      "prettier --write"
+    ]
+  }
+}

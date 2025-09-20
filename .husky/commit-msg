@@ -1,0 +1,7 @@
+#!/bin/sh
+
+export PATH="$PATH:/usr/local/bin"
+
+echo "🚨 Husky commit-msg hook is running"
+
+npx commitlint --edit "$1" || exit 1
