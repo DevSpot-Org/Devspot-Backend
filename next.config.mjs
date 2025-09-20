@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-
+import "./src/lib/config/env.js";
 const nextConfig = {
   /* config options here */
   webpack: (config) => {
