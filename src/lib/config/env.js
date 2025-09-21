@@ -3,6 +3,7 @@ const yup = require("yup");
 const envSchema = yup.object({
   // Core
   APP_ENV: yup.string().oneOf(["local", "development", "production", "staging"]).required(),
+  ALLOWED_ORIGIN: yup.string().required(),
   NODE_ENV: yup.string().oneOf(["development", "production", "test"]).required(),
   NEXT_PUBLIC_BASE_SITE_URL: yup.string().required(),
   NEXT_PUBLIC_PROTOCOL: yup
