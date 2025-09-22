@@ -5,11 +5,11 @@
   "scripts": {
     "dev": "next dev --turbo",
     "build": "pnpm run generate-types && next build",
-    "build:production": "next build",
+    "build:production": "pnpm run generate-types:production && next build",
     "start": "next start",
     "lint": "next lint",
-    "generate-types": "supabase gen types typescript --project-id pbnaslxybqdeosvgknbq --schema public > src/types/database.ts",
-    "generate-types:production": "supabase gen types typescript --project-id dbaimdvhgbmmxfjaszcp --schema public > src/types/database.ts",
+    "generate-types": "npx supabase gen types typescript --project-id pbnaslxybqdeosvgknbq --schema public > src/types/database.ts",
+    "generate-types:production": "npx supabase gen types typescript --project-id dbaimdvhgbmmxfjaszcp --schema public > src/types/database.ts",
     "seed-data": "npx supabase db dump --data-only -f supabase/seed.sql && npx supabase db reset",
     "format": "prettier --write .",
     "prepare": "npx husky"
