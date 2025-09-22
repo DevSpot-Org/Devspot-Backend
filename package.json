@@ -2,9 +2,6 @@
   "name": "devspot2",
   "version": "0.1.0",
   "private": true,
-  "pnpm": {
-    "neverBuiltDependencies": []
-  },
   "scripts": {
     "dev": "next dev --turbo",
     "build": "pnpm run generate-types && next build",
