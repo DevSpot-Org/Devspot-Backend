@@ -1,3 +1,5 @@
 {
-  "buildCommand": "sh vercel.sh"
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "sh vercel.sh",
+  "installCommand": "pnpm install --dangerously-allow-all-builds"
 }
