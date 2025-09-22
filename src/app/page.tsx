@@ -13,7 +13,7 @@ export default function Home() {
           priority
         />
         <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">Devspot Ap</li>
+          <li className="mb-2 tracking-[-.01em]">Devspot API</li>
         </ol>
       </main>
     </div>
