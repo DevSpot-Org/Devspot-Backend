@@ -1,8 +1,7 @@
 import { createClient } from "@/lib/supabase";
-import { NonceRepository } from "@/modules/user/repositories";
+import { NonceRepository, UsersRepository } from "@/modules/user/repositories";
 import { buildResponse } from "@/utils/buildResponse";
-import { signInService } from "../services";
-import { signInValidator } from "../validators";
+import { getAuthenticatedUser } from "../utils";
 
 export const generateNonceController = async (walletAddress: string) => {
   try {
@@ -34,34 +33,27 @@ export const generateNonceController = async (walletAddress: string) => {
   }
 };
 
-export const signInController = async (body: any) => {
+export const deleteAccountController = async () => {
   try {
-    await signInValidator.validate(body);
-    const data = await signInService(body.email, body.password);
+    const supabase = await createClient();
 
-    const { session } = data;
+    const { user, error } = await getAuthenticatedUser();
+    if (error || !user?.id) return error;
 
-    const res = buildResponse({ data, message: "Signin successful" });
+    const userService = new UsersRepository(supabase);
+    await userService.deleteAccount(user?.id);
 
-    if (session) {
-      res.cookies.set("sb-access-token", session.access_token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        path: "/",
-        maxAge: 60 * 60,
-      });
-      res.cookies.set("sb-refresh-token", session.refresh_token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        path: "/",
-        maxAge: 60 * 60 * 24 * 7,
-      });
-    }
-
-    return res;
-  } catch (err: any) {
-    return buildResponse({ isError: true, message: err.message, data: err });
+    return buildResponse({
+      message: "Account deleted successfully",
+      data: null,
+    });
+  } catch (err: unknown) {
+    const error = err as Error;
+    return buildResponse({
+      message: error?.message ?? "Failed to delete user",
+      data: err,
+      isError: true,
+      status: 400,
+    });
   }
 };

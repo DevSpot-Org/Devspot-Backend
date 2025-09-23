@@ -20,6 +20,7 @@ export const getUserIdentitiesController = async () => {
     return buildResponse({
       message: error?.message ?? "Failed to get user identities",
       data: err,
+      isError: true,
     });
   }
 };

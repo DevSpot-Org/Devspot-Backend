@@ -76,9 +76,38 @@ export class UserProfileRepository implements UserProfileRepositoryInterface {
     return data as ParticipantProfile;
   }
 
+  async findParticipantProfile(userId: string) {
+    const { data, error } = await this.supabase
+      .from(this.table)
+      .select("*")
+      .eq("participant_id", userId)
+      .single();
+
+    if (error) throw new Error(`Failed to retrieve participant profile: ${error.message}`);
+    return data;
+  }
   async deleteByUserId(id: string): Promise<void> {
     const { error } = await this.supabase.from(this.table).delete().eq("participant_id", id);
 
     if (error) throw error;
+  }
+
+  async updateParticipantProfile(
+    participantId: string,
+    participantData: Partial<ParticipantProfile>
+  ) {
+    const { error } = await this.supabase
+      .from(this.table)
+      .update(participantData)
+      .eq("participant_id", participantId)
+      .single();
+
+    if (error) {
+      throw new Error(
+        `Error updating participant profile for participant id ${participantId}: ${error.message}`
+      );
+    }
+
+    return null;
   }
 }
